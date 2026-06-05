@@ -1,9 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ProgressEntry } from '../../models/progress-entry.model';
 
 @Component({
   selector: 'app-progress-entry-form',
-  imports: [],
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './progress-entry-form.html',
   styleUrl: './progress-entry-form.css',
 })
-export class ProgressEntryForm {}
+export class ProgressEntryForm {
+  @Input() challengeId!: number;
+  @Output() progresssubmit = new EventEmitter<ProgressEntry>();
+
+  value: number | null = null;
+  note: string = '';
+
+  onSubmit() {
+    if (this.value !== null && this.challengeId) {
+      const entry: ProgressEntry = {
+        value: this.value,
+        note: this.note,
+        challengeId: this.challengeId,
+      };
+      this.progresssubmit.emit(entry);
+      this.resetForm();
+    }
+  }
+
+  private resetForm() {
+    this.value = null;
+    this.note = '';
+  }
+}
