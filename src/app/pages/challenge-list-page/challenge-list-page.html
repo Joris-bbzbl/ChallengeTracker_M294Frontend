@@ -1,9 +1,35 @@
-<mat-card>
-	<mat-card-title>Challenge List</mat-card-title>
-	<mat-card-content>
-		<p>Challenge list page placeholder</p>
-	</mat-card-content>
-	<mat-card-actions>
-		<button mat-raised-button color="primary">New Challenge</button>
-	</mat-card-actions>
-</mat-card>
+<div class="container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>Challenges</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="controls">
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-label>Filter by Category</mat-label>
+          <mat-select [(ngModel)]="selectedCategoryId" (ngModelChange)="onCategoryChange()">
+            <mat-option [value]="null">All Categories</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="createChallenge()">
+          Create Challenge
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="challenges-grid">
+    <app-challenge-card
+      *ngFor="let challenge of filteredChallenges"
+      [challenge]="challenge"
+      (delete)="onDeleteChallenge($event)"
+    ></app-challenge-card>
+  </div>
+
+  <div *ngIf="filteredChallenges.length === 0" class="empty-state">
+    <p>No challenges found.</p>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChallengeCard } from './challenge-card';
+import { Challenge } from '../../models/challenge.model';
 
 describe('ChallengeCard', () => {
   let component: ChallengeCard;
