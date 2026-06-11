@@ -25,6 +25,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <div *ngIf="categories.length === 0" class="empty-state">No categories available.</div>
+    <div *ngIf="categories.data.length === 0" class="empty-state">No categories available.</div>
   </mat-card-content>
 </mat-card>

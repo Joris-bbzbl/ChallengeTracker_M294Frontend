@@ -45,22 +45,33 @@ export class ChallengeListPage implements OnInit {
   loadData(): void {
     this.categoryService.getCategories().subscribe((categories) => {
       this.categories = categories;
-    });
 
-    this.challengeService.getChallenges().subscribe((challenges) => {
-      this.challenges = challenges;
-      this.filterChallenges();
+      this.challengeService.getChallenges().subscribe((challenges) => {
+        this.challenges = challenges.map((challenge) => ({
+          ...challenge,
+          categoryName:
+            this.categories.find((category) => category.id === challenge.categoryId)?.name ??
+            'No category',
+        }));
+
+        this.filterChallenges();
+      });
     });
   }
 
   filterChallenges(): void {
+    console.log('selectedCategoryId', this.selectedCategoryId);
+    console.log('challenges', this.challenges);
+
     if (this.selectedCategoryId === null) {
       this.filteredChallenges = this.challenges;
     } else {
       this.filteredChallenges = this.challenges.filter(
-        (c) => c.categoryId === this.selectedCategoryId,
+        (c) => Number(c.categoryId) === Number(this.selectedCategoryId),
       );
     }
+
+    console.log('filtered', this.filteredChallenges);
   }
 
   onCategoryChange(): void {
@@ -73,8 +84,12 @@ export class ChallengeListPage implements OnInit {
 
   onDeleteChallenge(id: number | undefined): void {
     if (id === undefined) return;
-    this.challengeService.deleteChallenge(id).subscribe(() => {
-      this.loadData();
+
+    this.challengeService.deleteChallenge(id).subscribe({
+      next: () => {
+        this.challenges = this.challenges.filter((c) => c.id !== id);
+        this.filteredChallenges = this.filteredChallenges.filter((c) => c.id !== id);
+      },
     });
   }
 }

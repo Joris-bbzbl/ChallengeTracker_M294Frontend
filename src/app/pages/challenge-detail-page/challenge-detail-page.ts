@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,9 +10,11 @@ import { ChallengeService } from '../../services/challenge.service';
 import { ProgressEntryService } from '../../services/progress-entry.service';
 import { ProgressEntryForm } from '../../components/progress-entry-form/progress-entry-form';
 import { ProgressEntryList } from '../../components/progress-entry-list/progress-entry-list';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-challenge-detail-page',
+  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
@@ -34,6 +36,8 @@ export class ChallengeDetailPage implements OnInit {
     private router: Router,
     private challengeService: ChallengeService,
     private progressEntryService: ProgressEntryService,
+    private cdr: ChangeDetectorRef,
+    private categoryService: CategoryService,
   ) {}
 
   ngOnInit() {
@@ -48,8 +52,22 @@ export class ChallengeDetailPage implements OnInit {
   private loadChallenge(id: number) {
     this.challengeService.getChallengeById(id).subscribe({
       next: (challenge) => {
-        this.challenge = challenge;
-        this.updateProgressPercentage();
+        this.categoryService.getCategories().subscribe({
+          next: (categories) => {
+            const category = categories.find((c) => Number(c.id) === Number(challenge.categoryId));
+
+            this.challenge = {
+              ...challenge,
+              categoryName: category?.name ?? 'No category',
+            };
+
+            this.updateProgressPercentage();
+            this.cdr.detectChanges();
+          },
+        });
+      },
+      error: (error) => {
+        console.error('Challenge load failed:', error);
       },
     });
   }
@@ -58,6 +76,7 @@ export class ChallengeDetailPage implements OnInit {
     this.progressEntryService.getProgressByChallenge(id).subscribe({
       next: (entries) => {
         this.progressEntries = entries;
+        this.cdr.detectChanges();
       },
     });
   }

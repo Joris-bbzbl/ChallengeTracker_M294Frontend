@@ -1,7 +1,9 @@
 <mat-card class="challenge-card">
   <mat-card-header>
     <mat-card-title>{{ challenge.title }}</mat-card-title>
-    <mat-card-subtitle>{{ challenge.categoryName || 'No Category' }}</mat-card-subtitle>
+    <mat-card-subtitle>{{
+      challenge.categoryName || challenge.category?.name || 'No category'
+    }}</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>

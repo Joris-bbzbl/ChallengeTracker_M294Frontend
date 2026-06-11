@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category.model';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-category-list-page',
@@ -15,7 +15,7 @@ import { Category } from '../../models/category.model';
   styleUrl: './category-list-page.css',
 })
 export class CategoryListPage implements OnInit {
-  categories: Category[] = [];
+  categories = new MatTableDataSource<Category>([]);
   displayedColumns = ['name', 'actions'];
 
   constructor(
@@ -30,7 +30,7 @@ export class CategoryListPage implements OnInit {
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (categories) => {
-        this.categories = categories;
+        this.categories.data = categories;
       },
     });
   }

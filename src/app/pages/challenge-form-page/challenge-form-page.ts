@@ -128,10 +128,11 @@ export class ChallengeFormPage implements OnInit {
       description: formValue.description,
       targetValue: formValue.targetValue,
       currentValue: 0,
-      status: 'active',
+      status: 'OPEN',
       startDate: formValue.startDate || undefined,
       endDate: formValue.endDate || undefined,
       categoryId: formValue.categoryId,
+      userId: 1 || 2 || 3 || 4 || 5,
     };
 
     this.challengeService.createChallenge(newChallenge).subscribe({

@@ -1,3 +1,5 @@
+import { Category } from './category.model';
+
 export interface Challenge {
   id?: number;
   title: string;
@@ -9,4 +11,6 @@ export interface Challenge {
   endDate?: string;
   categoryId?: number;
   categoryName?: string;
+  category?: Category;
+  userId?: number;
 }

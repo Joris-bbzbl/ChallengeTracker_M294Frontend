@@ -14,19 +14,19 @@ import { ProgressEntry } from '../../models/progress-entry.model';
 })
 export class ProgressEntryForm {
   @Input() challengeId!: number;
-  @Output() progresssubmit = new EventEmitter<ProgressEntry>();
-
+  @Output() progressSubmit = new EventEmitter<ProgressEntry>();
   value: number | null = null;
   note: string = '';
-
+  date: string = '';
   onSubmit() {
     if (this.value !== null && this.challengeId) {
       const entry: ProgressEntry = {
         value: this.value,
+        date: this.date,
         note: this.note,
         challengeId: this.challengeId,
       };
-      this.progresssubmit.emit(entry);
+      this.progressSubmit.emit(entry);
       this.resetForm();
     }
   }
@@ -34,5 +34,6 @@ export class ProgressEntryForm {
   private resetForm() {
     this.value = null;
     this.note = '';
+    this.date = '';
   }
 }
